@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Tomato Clicker Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body onload="loadingPage()">
+  <audio id="background-music" preload="auto" allow="autoplay">
+    <source src="audios/main-theme.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="click-sound" preload="auto">
+    <source src="audios/click-sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="tomato-sound" preload="auto">
+    <source src="audios/tomato-sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="upgrade-hover-sound" preload="auto" allow="autoplay">
+    <source src="audios/upgrade-hover-sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="upgrade-animation-sound" preload="auto">
+    <source src="audios/upgrade-animation-sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  
+  <div id="loader-div">
+    <div>
+      <h1 class="loader-text">Loading tomatoes...</h1>
+      <div id="loader"></div>
+    </div>
+  </div>
+
+  <div id="clicker-container" class="animate-page" style="display:none;">
+    <div id="header">
+      <div class="w3-container w3-right" style="margin-right: 2em;">
+        <div id="options-div" style="float: right;" onclick="optionsClick()">
+          <img src="images/options.png" alt="options-img" width="60">
+        </div>
+        <div id="options-menu-div" class="hide">
+          <h3 class="settings-headline">Settings</h3>
+          <div id="volume-div">
+            <div class="slidecontainer">
+              <span class="volume">Volume: <span id="volume-percentage" class="w3-right">50%</span></span>
+              <input type="range" min="0" max="1" step=".01" value=".5" class="slider" id="myRange">
+            </div>
+            <div id="volume-div-img">
+              <img src="images/volume-up-2.png" alt="volume-img" width="30" id="volume-img" style="border: 2px solid #f3c289;">
+            </div>
+          </div>
+          <div id="music-div">
+            <div class="musiccontainer">
+              <span class="music">Music: <span id="music-percentage" class="w3-right">0%</span></span>
+              <input type="range" min="0" max="1" step=".01" value="0" class="sliderMusic" id="myMusicRange">
+            </div>
+            <div id="music-div-img">
+              <img src="images/muted.png" alt="music-img" width="30" id="music-img" style="border: 2px solid #f3c289;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row w3-container">
+      <div style="margin-top: 2em;position: absolute; left: 50%;">
+        <div id="time-limit-div" class="w3-center hide col-3 col-6 col-s-3 col-s-9 col-s-12" style="width: 20em;position: relative; left: -50%;">
+          <div><h2 class="time-limit-headline w3-center">HURRY UP!</h2></div>
+          <div class="time-left" style="padding-top: 1em;padding-bottom: 1em;"><span>Time left: </span><span id="seconds-left">10</span><span>s</span></div>
+        </div>
+      </div>
+      <div style="margin: 5em 0 0 0;">
+        <div class="tomato-div col-3 col-6 col-s-3 col-s-9 col-s-12">
+          <h2 class="tomato-headline rounded-2 border-2 font-effect-outline">The Tomato Shop</h2>
+          <h2 id="tomato-headline-small" class="rounded-2 border-2">0 tomatoes</h2>
+          <div class="tomato-div-img">
+            <div id="tomato-img" class="col-3 col-6 col-s-3 col-s-9 col-s-12 w3-center">
+              <img src="images/tomato.png" alt="tomato" width="300" height="300" style="z-index: 2;position: relative;" onclick="tomatoClicking(event)">
+            </div>
+          </div>
+          <div id="button-div-upgrades" class="w3-center">
+            <button id="buttonUpgrades" class="button" style="width: 12em;" onclick="openMenuUpgrades()">Upgrades</button>
+            <button id="buttonIdleUpgrades" class="button" style="width: 12em;" onclick="openMenuIdleUpgrades()">Idle Upgrades</button>
+          </div>
+        </div>
+        <div class="upgrades-div col-3 col-6 col-s-3 col-s-9 col-s-12">
+          <h2 class="upgrades-headline rounded-2 border-2">Upgrades</h2>
+          <div class="vertical-menu-upgrades">
+            <div class="upgrades-background">
+              <div class="upgrades-pack row justify-content-left">
+                <div id="no-upgrades" class="hide">
+                  <p>You bought all the upgrades.</p>
+                </div>
+                <div id="double-click-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="double-click-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Double Click</h3></div>
+                    <div id="double-click-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="double-cursor-money" id="double-click-upgrade-money"> 10</span></div>
+                  </div>
+                  <div id="double-click-text-description"><p>Click on the tomato exactly by <span style="font-weight: bold;">double.</span></p></div>
+                  <div id="double-click-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="double-cursor-upgrade-div" class="row visible">
+                  <img src="images/double-cursor.png" alt="double-cursor" id="double-cursor-upgrade" class="upgrade-one double-cursor-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveDoubleCursorDescription(event)">
+                </div>
+                <div id="auto-click-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="auto-click-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Auto-Click</h3></div>
+                    <div id="auto-click-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="auto-click-money" id="auto-click-upgrade-money"> 20</span></div>
+                  </div>
+                  <div id="auto-click-text-description"><p>Let the tomatoes do it for you.</p></div>
+                  <div id="auto-click-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="auto-click-upgrade-div" class="row visible">
+                  <img src="images/cursor-auto.png" alt="auto-click" id="auto-click-upgrade" class="upgrade-one cursor-auto-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveAutoClickDescription(event)">
+                </div>
+                <div id="quadruple-click-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="quadruple-click-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Quadruple Click</h3></div>
+                    <div id="quadruple-click-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="quadruple-cursor-money" id="quadruple-click-upgrade-money"> 30</span></div>
+                  </div>
+                  <div id="quadruple-click-text-description"><p>Click on the tomato exactly by <span style="font-weight: bold;">quadruple.</span></p></div>
+                  <div id="quadruple-click-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="quadruple-cursor-upgrade-div" class="row visible">
+                  <img src="images/quadruple-cursor.png" alt="quadruple-cursor" id="quadruple-cursor-upgrade" class="upgrade-one quadruple-cursor-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveQuadrupleCursorDescription(event)">
+                </div>
+                <div id="auto-click-2x-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="auto-click-2x-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Auto-Click-2x</h3></div>
+                    <div id="auto-click-2x-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="auto-click-2x-money" id="auto-click-2x-upgrade-money"> 40</span></div>
+                  </div>
+                  <div id="auto-click-2x-text-description"><p>Let the tomatoes do it for you.</p></div>
+                  <div id="auto-click-2x-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="auto-click-2x-upgrade-div" class="row visible">
+                  <img src="images/cursor-auto-2x.png" alt="auto-click-2x" id="auto-click-2x-upgrade" class="upgrade-one cursor-auto-2x-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveAutoClick2xDescription(event)">
+                </div>
+                <div id="octuple-click-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="octuple-click-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Octuple Click</h3></div>
+                    <div id="octuple-click-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="octuple-cursor-money" id="octuple-click-upgrade-money"> 50</span></div>
+                  </div>
+                  <div id="octuple-click-text-description"><p>Click on the tomato exactly by <span style="font-weight: bold;">octuple.</span></p></div>
+                  <div id="octuple-click-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="octuple-cursor-upgrade-div" class="row visible">
+                  <img src="images/octuple-cursor.png" alt="octuple-cursor" id="octuple-cursor-upgrade" class="upgrade-one octuple-cursor-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveOctupleCursorDescription(event)">
+                </div>
+                <div id="sixteentimes-click-description" class="hide w3-hide-medium w3-hide-small">
+                  <div class="sixteentimes-click-headline row w3-bar-item">
+                    <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Sixteen Times Click</h3></div>
+                    <div id="sixteentimes-click-money" style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="sixteentimes-cursor-money" id="sixteentimes-click-upgrade-money"> 70</span></div>
+                  </div>
+                  <div id="sixteentimes-click-text-description"><p>Click on the tomato exactly by <span style="font-weight: bold;">sixteen times.</span></p></div>
+                  <div id="sixteentimes-click-text-buy"><p>Buy upgrade</p></div>
+                </div>
+                <div id="sixteentimes-cursor-upgrade-div" class="row visible">
+                  <img src="images/sixteentimes-cursor.png" alt="sixteentimes-cursor" id="sixteentimes-cursor-upgrade" class="upgrade-one sixteentimes-cursor-img rounded-1 border-5" style="height: 5.5em;width: 5.5em;" onmousemove="moveSixteentimesCursorDescription(event)">
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 class="idle-upgrades-headline rounded-2 border-2">Idle Upgrades</h2>
+          <div class="vertical-menu">
+            <ul class="idle-upgrades">
+              <div id="idle-cursor-description" class="hide w3-hide-medium">
+                <div class="idle-cursor-desc-headline row w3-bar-item">
+                  <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Cursor</h3></div>
+                  <div style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="idle-cursor-desc-money" id="idle-cursor-desc-money"><span id="idle-cursor-upgrade-money"> 100</span></span></div>
+                </div>
+                <div id="idle-cursor-text-description"><p>Click the cursor to earn powerful clicks for <span style="font-weight: bold;">10 seconds.</span></p></div>
+                <div id="idle-cursor-text-buy"><p>Buy upgrade</p></div>
+              </div>
+              <li id="idle-cursor" class="w3-bar" onmousemove="moveCursorDescription(event)" style="padding: 0 0 0 0;">
+                <img src="images/idle-cursor.png" alt="cursor" class="idle-images w3-bar-item" style="width:85px;">
+                <span id="idle-cursor-upgrades-headline" class="w3-bar-item w3-xlarge w3-right" style="padding-top: 0.5em;">0</span>
+                <div class="w3-bar-item">
+                  <span class="idle-upgrades-headline-names w3-bar w3-large">Cursor</span>
+                  <span class="w3-bar"><img src="images/tomato.png" alt="idle-cursor-money-img" class="idle-cursor-money-img"><span id="idle-cursor-price"> 100</span></span>
+                </div>
+              </li>
+              <div id="idle-wheel-description" class="hide w3-hide-medium">
+                <div class="idle-wheel-desc-headline row w3-bar-item">
+                  <div class="w3-bar-item w3-left"><h3 style="font-weight: lighter;font-family: 'Poetsen One', serif;">Wheel</h3></div>
+                  <div style="padding-top: 1em;"><span class="w3-bar-item w3-right"><img src="images/tomato.png" alt="idle-wheel-desc-money" id="idle-wheel-desc-money"><span id="idle-wheel-upgrade-money"> 150</span></span></div>
+                </div>
+                <div id="idle-wheel-text-description"><p>Click the wheel to earn faster auto-clicks for <span style="font-weight: bold;">10 seconds.</span></p></div>
+                <div id="idle-wheel-text-buy"><p>Buy upgrade</p></div>
+              </div>
+              <li id="idle-wheel" class="w3-bar" onmousemove="moveWheelDescription(event)" style="padding: 0 0 0 0;">
+                <img src="images/wheel.png" alt="wheel" class="idle-images w3-bar-item" style="width:85px;">
+                <span id="idle-wheel-upgrades-headline" class="w3-bar-item w3-xlarge w3-right" style="padding-top: 0.5em;"> 0</span>
+                <div class="w3-bar-item">
+                  <span class="idle-upgrades-headline-names w3-bar w3-large">Wheel</span>
+                  <span class="w3-bar"><img src="images/tomato.png" alt="idle-wheel-money-img" class="idle-wheel-money-img"><span id="idle-wheel-price"> 150</span></span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+        <span>
+          <span style="float: left;color: #FFD26A;">
+            <img src="images/tomato-version.png" alt="tomato-version" style="width: 1em;"> v1.0
+          </span>
+          © 2024 <a href="contact/contact.html" class="about-me-link">Javdev</a> · Tomato Clicker Game. All rights reserved.
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="js/main.js" charset="utf-8"></script>
+</body>
+</html>
