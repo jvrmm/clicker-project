@@ -1,7 +1,7 @@
 /*
 Code Copyright Carisdev, 2024.
 Hi, this is all the main file based on jQuery library. I'm a dev, indie for now, and it's my pleasure presents to you this clicker.
-I made it just to practice coding and learn about it.
+I made it just to practice coding and learning about it.
 */
 
 //Constants
